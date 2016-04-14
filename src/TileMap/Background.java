@@ -20,9 +20,7 @@ public class Background {
 	public Background(String s, double ms) {
 		
 		try {
-			image = ImageIO.read(
-				getClass().getResourceAsStream(s)
-			);
+			image = ImageIO.read(getClass().getResourceAsStream(s));
 			moveScale = ms;
 		}
 		catch(Exception e) {
@@ -51,20 +49,10 @@ public class Background {
 		g.drawImage(image, (int)x, (int)y, null);
 		
 		if(x < 0) {
-			g.drawImage(
-				image,
-				(int)x + GamePanel.WIDTH,
-				(int)y,
-				null
-			);
+			g.drawImage(image, (int)x + GamePanel.WIDTH, (int)y, null);
 		}
 		if(x > 0) {
-			g.drawImage(
-				image,
-				(int)x - GamePanel.WIDTH,
-				(int)y,
-				null
-			);
+			g.drawImage(image, (int)x - GamePanel.WIDTH, (int)y, null);
 		}
 	}
 	
