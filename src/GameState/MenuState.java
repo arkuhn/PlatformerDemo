@@ -2,7 +2,9 @@ package GameState;
 
 import Main.Game;
 import TileMap.Background;
+import sun.audio.AudioPlayer;
 
+import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
@@ -46,7 +48,7 @@ public void draw(Graphics2D g) {
     bg.draw(g);
     g.setColor((titleColor));
     g.setFont((titleFont));
-    g.drawString("Testing", 80, 70);
+    g.drawString("MEME: THE GAME", 20, 70);
 
     g.setFont(font);
 
