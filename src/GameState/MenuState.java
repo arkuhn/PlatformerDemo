@@ -2,7 +2,9 @@ package GameState;
 
 import Main.Game;
 import TileMap.Background;
+import sun.audio.AudioPlayer;
 
+import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
@@ -38,7 +40,8 @@ public class MenuState extends GameState{
     }
 
 
-public void init(){}
+public void init(){
+}
 public void update(){
     bg.update();
 }
@@ -46,16 +49,16 @@ public void draw(Graphics2D g) {
     bg.draw(g);
     g.setColor((titleColor));
     g.setFont((titleFont));
-    g.drawString("Testing", 80, 70);
+    g.drawString("MEME: THE GAME", 20, 70);
 
     g.setFont(font);
 
     for(int i = 0; i < options.length; i++){
         if(i == currentChoice){
-            g.setColor(Color.LIGHT_GRAY);
+            g.setColor(Color.BLACK);
         }
         else{
-            g.setColor(Color.CYAN);
+            g.setColor(Color.darkGray);
         }
         g.drawString(options[i], 145, 140 + i * 15);
     }
