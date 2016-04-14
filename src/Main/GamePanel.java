@@ -28,7 +28,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     private Graphics2D g;
     private GameStateController gsc;
 
-    private GameStateController gc;
 
     public GamePanel(){
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
@@ -47,7 +46,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     public void init() {
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-        g = (Graphics2D) g;
+        g = (Graphics2D) image.getGraphics() ;
         running = true;
         gsc = new GameStateController();
     }
