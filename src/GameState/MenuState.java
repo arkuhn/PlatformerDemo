@@ -26,7 +26,7 @@ public class MenuState extends GameState{
         this.gsc = gsc;
 
         try{
-            bg = new Background("/Background/menubg.gif", 1);
+            bg = new Background("/Backgrounds/menubg.gif", 1);
             bg.setVector(-.1, 0);
             titleColor = new Color(41, 41, 128);
             titleFont = new Font("Century Gothic", Font.PLAIN, 28);

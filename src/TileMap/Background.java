@@ -39,8 +39,8 @@ public class Background {
     }
 
     public void update() {
-        x += dx;
-        y += dy;
+        x += dx % GamePanel.WIDTH;
+        y += dy % GamePanel.HEIGHT;
     }
 
     public void draw(Graphics2D g){
