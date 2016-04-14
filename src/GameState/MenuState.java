@@ -52,10 +52,10 @@ public void draw(Graphics2D g) {
 
     for(int i = 0; i < options.length; i++){
         if(i == currentChoice){
-            g.setColor(Color.LIGHT_GRAY);
+            g.setColor(Color.red);
         }
         else{
-            g.setColor(Color.CYAN);
+            g.setColor(Color.black);
         }
         g.drawString(options[i], 145, 140 + i * 15);
     }
@@ -63,7 +63,7 @@ public void draw(Graphics2D g) {
 
 private void select(){
     if (currentChoice == 0){
-        //start
+        gsc.setState(gsc.LVL1STATE);
     }
     if (currentChoice == 1){
         //help
