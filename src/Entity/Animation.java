@@ -6,13 +6,18 @@ public class Animation {
 	
 	private BufferedImage[] frames;
 	private int currentFrame;
-	
+
+	//Timer between frames
 	private long startTime;
+	//Time between frames
 	private long delay;
-	
+
+	//Has the animation played already? Ex: Attack animations happen once
 	private boolean playedOnce;
-	
+
+
 	public void Animation() {
+
 		playedOnce = false;
 	}
 	
@@ -23,16 +28,24 @@ public class Animation {
 		playedOnce = false;
 	}
 	
-	public void setDelay(long d) { delay = d; }
-	public void setFrame(int i) { currentFrame = i; }
-	
+	public void setDelay(long d) {
+		delay = d;
+	}
+
+	public void setFrame(int i) {
+		currentFrame = i;
+	}
+
+	//Should we move to next frame
 	public void update() {
-		
+
+		//No animation
 		if(delay == -1) return;
 		
 		long elapsed = (System.nanoTime() - startTime) / 1000000;
+
 		if(elapsed > delay) {
-			currentFrame++;
+			currentFrame++; //Move onto next frame
 			startTime = System.nanoTime();
 		}
 		if(currentFrame == frames.length) {

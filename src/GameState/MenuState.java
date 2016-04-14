@@ -59,16 +59,16 @@ public class MenuState extends GameState {
 		// draw title
 		g.setColor(titleColor);
 		g.setFont(titleFont);
-		g.drawString("Dragon Tale", 80, 70);
+		g.drawString("MEME: THE GAME", 80, 70);
 		
 		// draw menu options
 		g.setFont(font);
 		for(int i = 0; i < options.length; i++) {
 			if(i == currentChoice) {
-				g.setColor(Color.BLACK);
+				g.setColor(Color.RED);
 			}
 			else {
-				g.setColor(Color.RED);
+				g.setColor(Color.BLACK);
 			}
 			g.drawString(options[i], 145, 140 + i * 15);
 		}
