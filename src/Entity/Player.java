@@ -31,11 +31,12 @@ public class Player extends MapObject {
 	
 	// gliding
 	private boolean gliding;
+	private boolean dashing;
 	
 	// animations
 	private ArrayList<BufferedImage[]> sprites;
 	private final int[] numFrames = {
-		2, 8, 1, 2, 4, 2, 5
+		2, 8, 1, 2, 4, 4, 2, 5
 	};
 	
 	// animation actions
@@ -44,6 +45,7 @@ public class Player extends MapObject {
 	private static final int JUMPING = 2;
 	private static final int FALLING = 3;
 	private static final int GLIDING = 4;
+	private static final int DASHING = 4;
 	private static final int FIREBALL = 5;
 	private static final int SCRATCHING = 6;
 	
@@ -79,21 +81,16 @@ public class Player extends MapObject {
 		// load sprites
 		try {
 			
-			BufferedImage spritesheet = ImageIO.read(
-				getClass().getResourceAsStream(
-					"/Sprites/Player/playersprites.gif"
-				)
-			);
+			BufferedImage spritesheet = ImageIO.read(getClass().getResourceAsStream("/Sprites/Player/playersprites.gif"));
 			
 			sprites = new ArrayList<BufferedImage[]>();
-			for(int i = 0; i < 7; i++) {
+			for(int i = 0; i < 8; i++) {
 				
-				BufferedImage[] bi =
-					new BufferedImage[numFrames[i]];
+				BufferedImage[] bi = new BufferedImage[numFrames[i]];
 				
 				for(int j = 0; j < numFrames[i]; j++) {
 					
-					if(i != 6) {
+					if(i != 7) {
 						bi[j] = spritesheet.getSubimage(
 								j * width,
 								i * height,
@@ -142,6 +139,7 @@ public class Player extends MapObject {
 	public void setGliding(boolean b) { 
 		gliding = b;
 	}
+	public void setDashing(boolean b) { dashing = b; }
 	
 	private void getNextPosition() {
 		
@@ -159,6 +157,7 @@ public class Player extends MapObject {
 			}
 		}
 		else {
+
 			if(dx > 0) {
 				dx -= stopSpeed;
 				if(dx < 0) {
@@ -185,10 +184,25 @@ public class Player extends MapObject {
 			dy = jumpStart;
 			falling = true;	
 		}
+
+
+
 		
 		// falling
 		if(falling) {
-			
+
+			if(dashing){
+				dy += fallSpeed;
+				if(facingRight){
+					dx += moveSpeed * 2 ;
+				}
+				else{
+					dx -= moveSpeed * 2 ;
+				}
+
+			}
+
+
 			if(dy > 0 && gliding) dy += fallSpeed * 0.1;
 			else dy += fallSpeed;
 			
@@ -215,6 +229,14 @@ public class Player extends MapObject {
 				animation.setFrames(sprites.get(SCRATCHING));
 				animation.setDelay(50);
 				width = 60;
+			}
+		}
+		else if(dashing){
+			if(currentAction != DASHING){
+				currentAction = DASHING;
+				animation.setFrames(sprites.get(DASHING));
+				animation.setDelay(100);
+				width= 30;
 			}
 		}
 		else if(firing) {
