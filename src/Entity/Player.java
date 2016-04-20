@@ -17,6 +17,7 @@ public class Player extends MapObject {
 	private boolean dead;
 	private boolean flinching;
 	private long flinchTimer;
+	private long dashTimer;
 	
 	// fireball
 	private boolean firing;
@@ -36,7 +37,7 @@ public class Player extends MapObject {
 	// animations
 	private ArrayList<BufferedImage[]> sprites;
 	private final int[] numFrames = {
-		2, 8, 1, 2, 4, 4, 2, 5
+		2, 8, 1, 2, 4, 2, 5, 4
 	};
 	
 	// animation actions
@@ -45,9 +46,9 @@ public class Player extends MapObject {
 	private static final int JUMPING = 2;
 	private static final int FALLING = 3;
 	private static final int GLIDING = 4;
-	private static final int DASHING = 4;
 	private static final int FIREBALL = 5;
 	private static final int SCRATCHING = 6;
+	private static final int DASHING = 7;
 	
 	public Player(TileMap tm) {
 		
@@ -81,7 +82,7 @@ public class Player extends MapObject {
 		// load sprites
 		try {
 			
-			BufferedImage spritesheet = ImageIO.read(getClass().getResourceAsStream("/Sprites/Player/playersprites.gif"));
+			BufferedImage spritesheet = ImageIO.read(getClass().getResourceAsStream("/Sprites/Player/playersprites2.gif"));
 			
 			sprites = new ArrayList<BufferedImage[]>();
 			for(int i = 0; i < 8; i++) {
@@ -90,7 +91,7 @@ public class Player extends MapObject {
 				
 				for(int j = 0; j < numFrames[i]; j++) {
 					
-					if(i != 7) {
+					if(i != 6) {
 						bi[j] = spritesheet.getSubimage(
 								j * width,
 								i * height,
@@ -102,7 +103,7 @@ public class Player extends MapObject {
 						bi[j] = spritesheet.getSubimage(
 								j * width * 2,
 								i * height,
-								width,
+								width * 2,
 								height
 						);
 					}
@@ -140,7 +141,8 @@ public class Player extends MapObject {
 		gliding = b;
 	}
 	public void setDashing(boolean b) { dashing = b; }
-	
+
+
 	private void getNextPosition() {
 		
 		// movement
@@ -185,22 +187,27 @@ public class Player extends MapObject {
 			falling = true;	
 		}
 
+		if(dashing){
+			if(dashTimer != System.nanoTime() && (dashTimer / 1000000) > 3000 ){
+					dashing = false;
+			}
+			dashTimer = System.nanoTime();
 
+			dy += fallSpeed * 4;
 
-		
-		// falling
-		if(falling) {
-
-			if(dashing){
-				dy += fallSpeed;
-				if(facingRight){
-					dx += moveSpeed * 2 ;
-				}
-				else{
-					dx -= moveSpeed * 2 ;
-				}
+			if(right) {
+				dx += moveSpeed * 10;
 
 			}
+			if(left) {
+				dx -= moveSpeed * 10;
+			}
+
+		}
+
+
+		// falling
+		if(falling) {
 
 
 			if(dy > 0 && gliding) dy += fallSpeed * 0.1;
@@ -221,6 +228,12 @@ public class Player extends MapObject {
 		getNextPosition();
 		checkTileMapCollision();
 		setPosition(xtemp, ytemp);
+
+		long elapsed = (System.nanoTime() - dashTimer) / 1000000;
+		if(dashing && (elapsed > 3000)){
+			dashing = false;
+		}
+
 		
 		// set animation
 		if(scratching) {
@@ -237,7 +250,9 @@ public class Player extends MapObject {
 				animation.setFrames(sprites.get(DASHING));
 				animation.setDelay(100);
 				width= 30;
+
 			}
+
 		}
 		else if(firing) {
 			if(currentAction != FIREBALL) {
