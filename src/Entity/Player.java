@@ -17,8 +17,9 @@ public class Player extends MapObject {
 	private boolean dead;
 	private boolean flinching;
 	private long flinchTimer;
-	private long dashTimer;
-	
+	private boolean canDash;
+	private static int DASH_DELAY = 500;
+
 	// fireball
 	private boolean firing;
 	private int fireCost;
@@ -39,7 +40,20 @@ public class Player extends MapObject {
 	private final int[] numFrames = {
 		2, 8, 1, 2, 4, 2, 5, 4
 	};
-	
+
+	private class DashThread extends Thread{
+		@Override
+		public void run() {
+			canDash = false;
+			try {
+				sleep(DASH_DELAY);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			canDash = true;
+		}
+	}
+
 	// animation actions
 	private static final int IDLE = 0;
 	private static final int WALKING = 1;
@@ -78,7 +92,8 @@ public class Player extends MapObject {
 		
 		scratchDamage = 8;
 		scratchRange = 40;
-		
+
+		canDash = true;
 		// load sprites
 		try {
 			
@@ -140,7 +155,16 @@ public class Player extends MapObject {
 	public void setGliding(boolean b) { 
 		gliding = b;
 	}
-	public void setDashing(boolean b) { dashing = b; }
+	public void setDashing(boolean b) {
+		if(b && canDash){
+			dashing = b;
+			DashThread t = new DashThread();
+			t.start();
+		}
+		else if(!b){
+			dashing = b;
+		}
+	}
 
 
 	private void getNextPosition() {
@@ -188,21 +212,20 @@ public class Player extends MapObject {
 		}
 
 		if(dashing){
-			if(dashTimer != System.nanoTime() && (dashTimer / 1000000) > 3000 ){
-					dashing = false;
-			}
-			dashTimer = System.nanoTime();
+//			if(dashTimer != System.nanoTime() && (dashTimer / 1000000) > 3000 ){
+//					dashing = false;
+//			}
+//			dashTimer = System.nanoTime();
 
 			dy += fallSpeed * 4;
 
 			if(right) {
-				dx += moveSpeed * 10;
+				dx += moveSpeed * 30;
 
 			}
 			if(left) {
-				dx -= moveSpeed * 10;
+				dx -= moveSpeed * 30;
 			}
-
 		}
 
 
@@ -229,10 +252,10 @@ public class Player extends MapObject {
 		checkTileMapCollision();
 		setPosition(xtemp, ytemp);
 
-		long elapsed = (System.nanoTime() - dashTimer) / 1000000;
-		if(dashing && (elapsed > 3000)){
-			dashing = false;
-		}
+		//long elapsed = (System.nanoTime() - dashTimer) / 1000000;
+//		if(dashing && (elapsed > 3000)){
+//			dashing = false;
+//		}
 
 		
 		// set animation
