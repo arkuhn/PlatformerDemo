@@ -110,7 +110,7 @@ public class Player extends MapObject {
 			BufferedImage spritesheet = ImageIO.read(getClass().getResourceAsStream("/Sprites/Player/playersprites2.gif"));
 			
 			sprites = new ArrayList<BufferedImage[]>();
-			for(int i = 0; i < 9h; i++) {
+			for(int i = 0; i < 9; i++) {
 				
 				BufferedImage[] bi = new BufferedImage[numFrames[i]];
 				
@@ -124,11 +124,11 @@ public class Player extends MapObject {
 								height
 						);
 					}
-					else if(i == 7){
+					else if(i == 8){
 						bi[j] = spritesheet.getSubimage(
-								j * width + 10,
+								j * 40,
 								i * height,
-								width + 10,
+								40,
 								height
 						);
 					}
@@ -312,7 +312,7 @@ public class Player extends MapObject {
 			if(currentAction != HEALING){
 				currentAction = HEALING;
 				animation.setFrames(sprites.get(HEALING));
-				animation.setDelay(100);
+				//animation.setDelay(500);
 				width = 40;
 			}
 		}
