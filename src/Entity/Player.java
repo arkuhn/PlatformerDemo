@@ -18,7 +18,8 @@ public class Player extends MapObject {
 	private boolean flinching;
 	private long flinchTimer;
 	private boolean canDash;
-	private static int DASH_DELAY = 500;
+	private static final int DASH_COOLDOWN = 500;
+	private static final int DASH_DELAY = 100;
 
 	// fireball
 	private boolean firing;
@@ -47,6 +48,12 @@ public class Player extends MapObject {
 			canDash = false;
 			try {
 				sleep(DASH_DELAY);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			setDashing(false);
+			try {
+				sleep(DASH_COOLDOWN);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
