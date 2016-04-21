@@ -87,15 +87,20 @@ public class Slugger extends Enemy{
         if (right  && dx == 0){
             right = false;
             left = true;
+            facingRight = false;
         }
         else if(left && dx ==0){
             right = true;
             left = false;
+            facingRight = true;
         }
+
+        animation.update();
 
     }
 
     public void draw(Graphics2D g){
         setMapPosition();
+        super.draw(g);
     }
 }
