@@ -8,6 +8,7 @@ import Entity.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.concurrent.Exchanger;
 
 public class Level1State extends GameState {
 	
@@ -18,6 +19,7 @@ public class Level1State extends GameState {
 	private HUD hud;
 
 	private ArrayList<Enemy> enemies;
+	private ArrayList<Explosion> explosions;
 	
 	public Level1State(GameStateManager gsm) {
 		this.gsm = gsm;
@@ -43,12 +45,15 @@ public class Level1State extends GameState {
 		s.setPosition(100, 100);
 		enemies.add(s);
 
+		explosions = new ArrayList<Explosion>();
 		hud = new HUD(player);
 	}
 	
 	
 	public void update() {
-		
+
+
+
 		// update player
 		player.update();
 		tileMap.setPosition(
@@ -59,8 +64,26 @@ public class Level1State extends GameState {
 		//set background
 		bg.setPosition(tileMap.getx(), tileMap.gety());
 
+		player.checkAttack(enemies);
+
 		for(int i = 0; i < enemies.size(); i++){
-			enemies.get(i).update();
+			Enemy e = enemies.get(i);
+			e.update();
+			if(e.isDead()){
+				enemies.remove(i);
+				i--;
+				explosions.add(new Explosion(e.getx(), e.gety()));
+			}
+		}
+
+		for(int i=0; i< explosions.size(); i++){
+			Explosion e = explosions.get(i);
+			e.update();
+
+			if(e.shouldRemove()){
+				explosions.remove(e);
+				i--;
+			}
 		}
 	}
 	
@@ -77,6 +100,11 @@ public class Level1State extends GameState {
 
 		for(int i = 0; i < enemies.size(); i++){
 			enemies.get(i).draw(g);
+		}
+
+		for(int i = 0; i < explosions.size(); i++){
+			explosions.get(i).setMapPosition((int)tileMap.getx(),(int) tileMap.gety());
+			explosions.get(i).draw(g);
 		}
 
 		hud.draw(g);
