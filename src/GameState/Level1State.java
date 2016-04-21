@@ -92,6 +92,7 @@ public class Level1State extends GameState {
 		if(k == KeyEvent.VK_R) player.setScratching(true);
 		if(k == KeyEvent.VK_F) player.setFiring(true);
 		if(k == KeyEvent.VK_D) player.setDashing(true);
+		if(k == KeyEvent.VK_H) player.setHealing(true);
 	}
 	
 	public void keyReleased(int k) {
@@ -104,6 +105,7 @@ public class Level1State extends GameState {
 		if(k == KeyEvent.VK_D) player.setDashing(false);
 		if(k == KeyEvent.VK_R) player.setScratching(false);
 		if(k == KeyEvent.VK_F) player.setFiring(false);
+		if(k == KeyEvent.VK_H) player.setHealing(false);
 	}
 	
 }

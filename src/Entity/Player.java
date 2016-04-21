@@ -1,6 +1,7 @@
 package Entity;
 
 import TileMap.*;
+import com.sun.deploy.net.protocol.chrome.ChromeURLConnection;
 
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
@@ -35,11 +36,12 @@ public class Player extends MapObject {
 	// gliding
 	private boolean gliding;
 	private boolean dashing;
+	private boolean healing;
 	
 	// animations
 	private ArrayList<BufferedImage[]> sprites;
 	private final int[] numFrames = {
-		2, 8, 1, 2, 4, 2, 5, 4
+		2, 8, 1, 2, 4, 2, 5, 4, 6
 	};
 
 	private class DashThread extends Thread{
@@ -70,6 +72,7 @@ public class Player extends MapObject {
 	private static final int FIREBALL = 5;
 	private static final int SCRATCHING = 6;
 	private static final int DASHING = 7;
+	private static final int HEALING = 8;
 	
 	public Player(TileMap tm) {
 		
@@ -107,25 +110,33 @@ public class Player extends MapObject {
 			BufferedImage spritesheet = ImageIO.read(getClass().getResourceAsStream("/Sprites/Player/playersprites2.gif"));
 			
 			sprites = new ArrayList<BufferedImage[]>();
-			for(int i = 0; i < 8; i++) {
+			for(int i = 0; i < 9h; i++) {
 				
 				BufferedImage[] bi = new BufferedImage[numFrames[i]];
 				
 				for(int j = 0; j < numFrames[i]; j++) {
 					
-					if(i != 6) {
+					if(i == 6) {
 						bi[j] = spritesheet.getSubimage(
-								j * width,
+								j * width * 2,
 								i * height,
-								width,
+								width * 2,
+								height
+						);
+					}
+					else if(i == 7){
+						bi[j] = spritesheet.getSubimage(
+								j * width + 10,
+								i * height,
+								width + 10,
 								height
 						);
 					}
 					else {
 						bi[j] = spritesheet.getSubimage(
-								j * width * 2,
+								j * width,
 								i * height,
-								width * 2,
+								width,
 								height
 						);
 					}
@@ -172,6 +183,7 @@ public class Player extends MapObject {
 			dashing = b;
 		}
 	}
+	public void setHealing(boolean b){healing = b;}
 
 
 	private void getNextPosition() {
@@ -294,6 +306,14 @@ public class Player extends MapObject {
 				animation.setFrames(sprites.get(SCRATCHING));
 				animation.setDelay(50);
 				width = 60;
+			}
+		}
+		else if(healing){
+			if(currentAction != HEALING){
+				currentAction = HEALING;
+				animation.setFrames(sprites.get(HEALING));
+				animation.setDelay(100);
+				width = 40;
 			}
 		}
 		else if(dashing){
