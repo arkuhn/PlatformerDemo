@@ -50,6 +50,7 @@ public class Slugger extends Enemy{
         animation.setDelay(300);
 
         right = true;
+        facingRight = true;
     }
 
     public void getNextPosition(){

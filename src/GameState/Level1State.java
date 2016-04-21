@@ -15,6 +15,7 @@ public class Level1State extends GameState {
 	private Background bg;
 	
 	private Player player;
+	private HUD hud;
 
 	private ArrayList<Enemy> enemies;
 	
@@ -41,6 +42,8 @@ public class Level1State extends GameState {
 		s = new Slugger (tileMap);
 		s.setPosition(100, 100);
 		enemies.add(s);
+
+		hud = new HUD(player);
 	}
 	
 	
@@ -75,7 +78,8 @@ public class Level1State extends GameState {
 		for(int i = 0; i < enemies.size(); i++){
 			enemies.get(i).draw(g);
 		}
-		
+
+		hud.draw(g);
 	}
 	
 	public void keyPressed(int k) {
