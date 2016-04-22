@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 public class Player extends MapObject {
 	
 	// player stuff
-	private int health;
+	private long health;
 	private int maxHealth;
 	private int fire;
 	private int maxFire;
@@ -20,8 +20,11 @@ public class Player extends MapObject {
 	private boolean flinching;
 	private long flinchTimer;
 	private boolean canDash;
+	private boolean canHeal;
 	private static final int DASH_COOLDOWN = 500;
 	private static final int DASH_DELAY = 100;
+	private static final int HEAL_COOLDOWN = 5000;
+	private static final int HEAL_DELAY = 3000;
 
 	// fireball
 	private boolean firing;
@@ -64,6 +67,25 @@ public class Player extends MapObject {
 		}
 	}
 
+	private class HealThread extends Thread{
+		@Override
+		public void run() {
+			canHeal = false;
+			try {
+				sleep(HEAL_DELAY);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			setHealing(false);
+			try {
+				sleep(HEAL_COOLDOWN);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			canHeal = true;
+		}
+	}
+
 	// animation actions
 	private static final int IDLE = 0;
 	private static final int WALKING = 1;
@@ -93,8 +115,9 @@ public class Player extends MapObject {
 		stopJumpSpeed = 0.3;
 		
 		facingRight = true;
-		
-		health = maxHealth = 5;
+
+		maxHealth = 10;
+		health = 10;
 		fire = maxFire = 2500;
 		
 		fireCost = 200;
@@ -105,6 +128,7 @@ public class Player extends MapObject {
 		scratchRange = 40;
 
 		canDash = true;
+		canHeal = true;
 		// load sprites
 		try {
 			
@@ -160,7 +184,7 @@ public class Player extends MapObject {
 		
 	}
 	
-	public int getHealth() { return health; }
+	public long getHealth() { return health; }
 	public int getMaxHealth() { return maxHealth; }
 	public int getFire() { return fire; }
 	public int getMaxFire() { return maxFire; }
@@ -184,7 +208,16 @@ public class Player extends MapObject {
 			dashing = b;
 		}
 	}
-	public void setHealing(boolean b){healing = b;}
+	public void setHealing(boolean b){
+		if(b && canHeal){
+			healing = b;
+			HealThread d = new HealThread();
+			d.start();
+		}
+		else if(!b){
+			healing = b;
+		}
+	}
 
 	public void checkAttack(ArrayList<Enemy> enemies){
 
@@ -328,6 +361,8 @@ public class Player extends MapObject {
 		checkTileMapCollision();
 		setPosition(xtemp, ytemp);
 
+
+
 		//check attack stopped
 		if(currentAction == SCRATCHING){
 			if (animation.hasPlayedOnce()) scratching = false;
@@ -338,6 +373,7 @@ public class Player extends MapObject {
 		}
 
 		fire += 1;
+
 		if(fire > maxFire) fire = maxFire;
 		if(firing && currentAction != FIREBALL){
 			if (fire > fireCost){
@@ -346,6 +382,12 @@ public class Player extends MapObject {
 				fb.setPosition(x, y);
 				fireBalls.add(fb);
 			}
+		}
+
+		if(healing){
+			if (health > maxHealth) health = maxHealth;
+			health += 1;
+
 		}
 
 		for(int i = 0; i < fireBalls.size(); i++){
@@ -376,7 +418,7 @@ public class Player extends MapObject {
 			if(currentAction != HEALING){
 				currentAction = HEALING;
 				animation.setFrames(sprites.get(HEALING));
-				//animation.setDelay(500);
+				animation.setDelay(5000);
 				width = 40;
 			}
 		}
