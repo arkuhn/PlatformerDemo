@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Currency;
 
 public class Player extends MapObject {
 	
@@ -25,6 +26,7 @@ public class Player extends MapObject {
 	private static final int DASH_DELAY = 100;
 	private static final int HEAL_COOLDOWN = 5000;
 	private static final int HEAL_DELAY = 3000;
+	private static final int HEAL_INT = 500;
 
 	// fireball
 	private boolean firing;
@@ -76,6 +78,16 @@ public class Player extends MapObject {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+
+			for (int i = 0; i <= 3; i++){
+				try {
+					sleep(HEAL_INT);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				health += 1;
+			}
+
 			setHealing(false);
 			try {
 				sleep(HEAL_COOLDOWN);
@@ -321,11 +333,6 @@ public class Player extends MapObject {
 		}
 
 		if(dashing){
-//			if(dashTimer != System.nanoTime() && (dashTimer / 1000000) > 3000 ){
-//					dashing = false;
-//			}
-//			dashTimer = System.nanoTime();
-
 			dy += fallSpeed * 4;
 
 			if(right) {
@@ -372,7 +379,10 @@ public class Player extends MapObject {
 			if(animation.hasPlayedOnce() ) firing = false;
 		}
 
+
 		fire += 1;
+
+
 
 		if(fire > maxFire) fire = maxFire;
 		if(firing && currentAction != FIREBALL){
@@ -384,11 +394,7 @@ public class Player extends MapObject {
 			}
 		}
 
-		if(healing){
-			if (health > maxHealth) health = maxHealth;
-			health += 1;
 
-		}
 
 		for(int i = 0; i < fireBalls.size(); i++){
 			fireBalls.get(i).update();
@@ -414,11 +420,12 @@ public class Player extends MapObject {
 				width = 60;
 			}
 		}
+
 		else if(healing){
 			if(currentAction != HEALING){
 				currentAction = HEALING;
 				animation.setFrames(sprites.get(HEALING));
-				animation.setDelay(5000);
+				animation.setDelay(300);
 				width = 40;
 			}
 		}
@@ -441,6 +448,7 @@ public class Player extends MapObject {
 			}
 		}
 		else if(dy > 0) {
+
 			if(gliding) {
 				if(currentAction != GLIDING) {
 					currentAction = GLIDING;
