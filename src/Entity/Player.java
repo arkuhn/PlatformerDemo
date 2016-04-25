@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Currency;
+import java.util.FormatFlagsConversionMismatchException;
 
 public class Player extends MapObject {
 	
@@ -27,6 +28,8 @@ public class Player extends MapObject {
 	private static final int HEAL_COOLDOWN = 5000;
 	private static final int HEAL_DELAY = 3000;
 	private static final int HEAL_INT = 500;
+
+
 
 	// fireball
 	private boolean firing;
@@ -85,7 +88,9 @@ public class Player extends MapObject {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				health += 1;
+				if (health < maxHealth){
+					health += 1;
+				}
 			}
 
 			setHealing(false);
@@ -200,7 +205,7 @@ public class Player extends MapObject {
 	public int getMaxHealth() { return maxHealth; }
 	public int getFire() { return fire; }
 	public int getMaxFire() { return maxFire; }
-	
+
 	public void setFiring(boolean b) {
 		firing = b;
 	}
@@ -230,6 +235,21 @@ public class Player extends MapObject {
 			healing = b;
 		}
 	}
+	/*
+	public void checkConsume(ArrayList<Enemy> enemies){
+		for(int i = 0; i < enemies.size(); i++) {
+
+			Enemy e = enemies.get(i);
+
+			if (e.isItem()){
+				if(e.getx() == x && e.gety() == y && consuming){
+					setHealing(true);
+					enemies.remove(e);
+				}
+			}
+		}
+	}
+	*/
 
 	public void checkAttack(ArrayList<Enemy> enemies){
 
@@ -273,7 +293,15 @@ public class Player extends MapObject {
 
 			// check enemy collision
 			if(intersects(e)) {
-				hit(e.getDamage());
+				if(!e.isItem()){
+					hit(e.getDamage());
+				}
+				else{
+					enemies.remove(e);
+					if(maxHealth > health){
+						setHealing(true);
+					}
+				}
 			}
 
 		}
@@ -379,10 +407,7 @@ public class Player extends MapObject {
 			if(animation.hasPlayedOnce() ) firing = false;
 		}
 
-
 		fire += 1;
-
-
 
 		if(fire > maxFire) fire = maxFire;
 		if(firing && currentAction != FIREBALL){

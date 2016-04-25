@@ -31,6 +31,8 @@ public class Enemy extends MapObject {
 
     public void update(){}
 
+    public boolean isItem(){ return false;}
+
     public void hit(int damage){
         if (dead || flinching) return;
         health -= damage;

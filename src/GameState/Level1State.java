@@ -1,5 +1,6 @@
 package GameState;
 
+import Entity.Enemies.HealthPack;
 import Entity.Enemies.Slugger;
 import Main.GamePanel;
 import TileMap.*;
@@ -8,7 +9,6 @@ import Entity.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.concurrent.Exchanger;
 
 public class Level1State extends GameState {
 	
@@ -40,10 +40,18 @@ public class Level1State extends GameState {
 		player.setPosition(100, 100);
 
 		enemies = new ArrayList<Enemy>();
+
 		Slugger s;
 		s = new Slugger (tileMap);
-		s.setPosition(100, 100);
+		s.setPosition(300, 100);
 		enemies.add(s);
+
+		HealthPack h;
+		h = new HealthPack((tileMap));
+		h.setPosition(300,100);
+		enemies.add(h);
+
+
 
 		explosions = new ArrayList<Explosion>();
 		hud = new HUD(player);
@@ -65,6 +73,7 @@ public class Level1State extends GameState {
 		bg.setPosition(tileMap.getx(), tileMap.gety());
 
 		player.checkAttack(enemies);
+		//player.checkConsume(enemies);
 
 		for(int i = 0; i < enemies.size(); i++){
 			Enemy e = enemies.get(i);
