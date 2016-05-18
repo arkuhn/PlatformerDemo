@@ -59,7 +59,7 @@ public class MenuState extends GameState {
 		// draw title
 		g.setColor(titleColor);
 		g.setFont(titleFont);
-		g.drawString("MEME: THE GAME", 80, 70);
+		g.drawString("First Game Ever", 80, 70);
 		
 		// draw menu options
 		g.setFont(font);
